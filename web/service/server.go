@@ -175,7 +175,7 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 }
 
 func (s *ServerService) GetXrayVersions() ([]string, error) {
-	url := "https://api.github.com/repos/hossinasaadi/Xray-core/releases"
+	url := "https://api.github.com/repos/XTLS/Xray-core/releases"
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -218,7 +218,7 @@ func (s *ServerService) downloadXRay(version string) (string, error) {
 	}
 
 	fileName := fmt.Sprintf("Xray-%s-%s.zip", osName, arch)
-	url := fmt.Sprintf("https://github.com/hossinasaadi/Xray-core/releases/download/%s/%s", version, fileName)
+	url := fmt.Sprintf("https://github.com/XTLS/Xray-core/releases/download/%s/%s", version, fileName)
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
@@ -287,7 +287,15 @@ func (s *ServerService) UpdateXray(version string) error {
 		return err
 	}
 
-	err = copyZipFile("xray", xray.GetBinaryPath())
+	// 新版本官方 XTLS/Xray-core 的文件直接在zip根目录下
+	var binaryName string
+	if runtime.GOOS == "windows" {
+		binaryName = "xray.exe"
+	} else {
+		binaryName = "xray"
+	}
+	
+	err = copyZipFile(binaryName, xray.GetBinaryPath())
 	if err != nil {
 		return err
 	}

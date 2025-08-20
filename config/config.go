@@ -46,5 +46,6 @@ func IsDebug() bool {
 }
 
 func GetDBPath() string {
-	return fmt.Sprintf("/etc/%s/%s.db", GetName(), GetName())
+	// 将数据库文件放在可执行程序根目录
+	return fmt.Sprintf("%s.db", GetName())
 }

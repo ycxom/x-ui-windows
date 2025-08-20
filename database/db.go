@@ -1,7 +1,7 @@
 package database
 
 import (
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"io/fs"
@@ -50,9 +50,12 @@ func initClientTraffic() error {
 
 func InitDB(dbPath string) error {
 	dir := path.Dir(dbPath)
-	err := os.MkdirAll(dir, fs.ModeDir)
-	if err != nil {
-		return err
+	// 只有当目录不是当前目录时才创建目录
+	if dir != "." && dir != "" {
+		err := os.MkdirAll(dir, fs.ModeDir)
+		if err != nil {
+			return err
+		}
 	}
 
 	var gormLogger logger.Interface

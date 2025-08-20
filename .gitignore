@@ -11,3 +11,6 @@ main
 release/
 access.log
 .cache
+Xray-windows-64
+.codebuddy
+*.exe
