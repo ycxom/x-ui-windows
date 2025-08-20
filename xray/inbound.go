@@ -13,6 +13,11 @@ type InboundConfig struct {
 	StreamSettings json_util.RawMessage `json:"streamSettings"`
 	Tag            string               `json:"tag"`
 	Sniffing       json_util.RawMessage `json:"sniffing"`
+	
+	// Backend address configuration for proxy forwarding
+	BackendAddress string `json:"backendAddress,omitempty"`
+	BackendPort    int    `json:"backendPort,omitempty"`
+	EnableBackend  bool   `json:"enableBackend,omitempty"`
 }
 
 func (c *InboundConfig) Equals(other *InboundConfig) bool {
@@ -35,6 +40,16 @@ func (c *InboundConfig) Equals(other *InboundConfig) bool {
 		return false
 	}
 	if !bytes.Equal(c.Sniffing, other.Sniffing) {
+		return false
+	}
+	// Compare backend address fields
+	if c.BackendAddress != other.BackendAddress {
+		return false
+	}
+	if c.BackendPort != other.BackendPort {
+		return false
+	}
+	if c.EnableBackend != other.EnableBackend {
 		return false
 	}
 	return true

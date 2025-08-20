@@ -93,8 +93,8 @@
                             <template slot="stream" slot-scope="text, dbInbound, index">
                                 <template v-if="dbInbound.isVMess || dbInbound.isVLess || dbInbound.isTrojan || dbInbound.isSS">
                                     <a-tag color="green">[[ inbounds[index].stream.network ]]</a-tag>
-                                    <a-tag v-if="inbounds[index].stream.isTls" color="blue">tls</a-tag>
-                                    <a-tag v-if="inbounds[index].stream.isXTls" color="blue">xtls</a-tag>
+                                    <a-tag v-if="inbounds[index].stream.isTls" color="blue">{{ i18n "pages.inbounds.tls.tls" }}</a-tag>
+                                    <a-tag v-if="inbounds[index].stream.isXTls" color="blue">{{ i18n "pages.inbounds.tls.xtls" }}</a-tag>
                                 </template>
                                 <template v-else>{{ i18n "none" }}</template>
                             </template>
@@ -278,6 +278,12 @@
                     settings: inbound.settings.toString(),
                     streamSettings: inbound.stream.toString(),
                     sniffing: inbound.canSniffing() ? inbound.sniffing.toString() : '{}',
+                    
+                    // Backend proxy fields
+                    enableBackend: dbInbound.enableBackend,
+                    backendAddress: dbInbound.backendAddress,
+                    backendPort: dbInbound.backendPort,
+                    backendProtocol: dbInbound.backendProtocol,
                 };
                 await this.submit('/xui/inbound/add', data, inModal);
             },
@@ -296,6 +302,12 @@
                     settings: inbound.settings.toString(),
                     streamSettings: inbound.stream.toString(),
                     sniffing: inbound.canSniffing() ? inbound.sniffing.toString() : '{}',
+                    
+                    // Backend proxy fields
+                    enableBackend: dbInbound.enableBackend,
+                    backendAddress: dbInbound.backendAddress,
+                    backendPort: dbInbound.backendPort,
+                    backendProtocol: dbInbound.backendProtocol,
                 };
                 await this.submit(`/xui/inbound/update/${dbInbound.id}`, data, inModal);
             },

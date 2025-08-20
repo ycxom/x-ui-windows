@@ -2,6 +2,9 @@
 tmp
 bin/xray-darwin-arm64
 bin/config.json
+bin/x-ui.db
+bin/blockedIPs
+bin/access.log
 dist/
 x-ui-*.tar.gz
 /x-ui
@@ -14,3 +17,6 @@ access.log
 Xray-windows-64
 .codebuddy
 *.exe
+*.db
+restart_xray.ps1
+insert_socks_test.sql

@@ -176,9 +176,9 @@
 
             getHeaderText(email) {
                 if(email == "")
-                    return "Add Client"
+                    return '{{ i18n "pages.inbounds.addClient" }}'
                 
-                return email + (this.isClientEnable(email) == true ? ' Active' : ' Deactive')
+                return email + (this.isClientEnable(email) == true ? ' {{ i18n "pages.inbounds.active" }}' : ' {{ i18n "pages.inbounds.deactive" }}')
             },
 
             getNewEmail(client) {

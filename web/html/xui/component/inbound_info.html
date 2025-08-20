@@ -25,17 +25,17 @@
 </template>
 
 <template v-if="inbound.tls || inbound.xtls">
-    <p v-if="inbound.tls">tls: <a-tag color="green">{{ i18n "turnOn" }}</a-tag></p>
-    <p v-if="inbound.xtls">xtls: <a-tag color="green">{{ i18n "turnOn" }}</a-tag></p>
+    <p v-if="inbound.tls">{{ i18n "pages.inbounds.tls.tls" }}: <a-tag color="green">{{ i18n "turnOn" }}</a-tag></p>
+    <p v-if="inbound.xtls">{{ i18n "pages.inbounds.tls.xtls" }}: <a-tag color="green">{{ i18n "turnOn" }}</a-tag></p>
 </template>
 <template v-else>
-    <p>tls: <a-tag color="red">{{ i18n "closure" }}</a-tag></p>
+    <p>{{ i18n "pages.inbounds.tls.tls" }}: <a-tag color="red">{{ i18n "closure" }}</a-tag></p>
 </template>
 <p v-if="inbound.tls">
-    tls {{ i18n "domainName" }}: <a-tag :color="inbound.serverName ? 'green' : 'orange'">[[ inbound.serverName ? inbound.serverName : '' ]]</a-tag>
+    {{ i18n "pages.inbounds.tls.tls" }} {{ i18n "domainName" }}: <a-tag :color="inbound.serverName ? 'green' : 'orange'">[[ inbound.serverName ? inbound.serverName : '' ]]</a-tag>
 </p>
 <p v-if="inbound.xtls">
-    xtls {{ i18n "domainName" }}: <a-tag :color="inbound.serverName ? 'green' : 'orange'">[[ inbound.serverName ? inbound.serverName : '' ]]</a-tag>
+    {{ i18n "pages.inbounds.tls.xtls" }} {{ i18n "domainName" }}: <a-tag :color="inbound.serverName ? 'green' : 'orange'">[[ inbound.serverName ? inbound.serverName : '' ]]</a-tag>
 </p>
 {{end}}
 

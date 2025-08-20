@@ -13,6 +13,7 @@ const (
 	VLESS       Protocol = "vless"
 	Dokodemo    Protocol = "Dokodemo-door"
 	Http        Protocol = "http"
+	Socks       Protocol = "socks"
 	Trojan      Protocol = "trojan"
 	Shadowsocks Protocol = "shadowsocks"
 )
@@ -42,6 +43,12 @@ type Inbound struct {
 	StreamSettings string   `json:"streamSettings" form:"streamSettings"`
 	Tag            string   `json:"tag" form:"tag" gorm:"unique"`
 	Sniffing       string   `json:"sniffing" form:"sniffing"`
+	
+	// custom backend address fields
+	BackendAddress  string `json:"backendAddress" form:"backendAddress"`
+	BackendPort     int    `json:"backendPort" form:"backendPort"`
+	BackendProtocol string `json:"backendProtocol" form:"backendProtocol"`
+	EnableBackend   bool   `json:"enableBackend" form:"enableBackend"`
 }
 type InboundClientIps struct {
 	Id       int    `json:"id" gorm:"primaryKey;autoIncrement"`
@@ -51,10 +58,14 @@ type InboundClientIps struct {
 
 func (i *Inbound) GenXrayInboundConfig() *xray.InboundConfig {
 	listen := i.Listen
-	if listen != "" {
+	if listen == "" {
+		// 如果listen字段为空，设置默认监听地址
+		listen = "\"0.0.0.0\""
+	} else {
 		listen = fmt.Sprintf("\"%v\"", listen)
 	}
-	return &xray.InboundConfig{
+	
+	config := &xray.InboundConfig{
 		Listen:         json_util.RawMessage(listen),
 		Port:           i.Port,
 		Protocol:       string(i.Protocol),
@@ -63,6 +74,18 @@ func (i *Inbound) GenXrayInboundConfig() *xray.InboundConfig {
 		Tag:            i.Tag,
 		Sniffing:       json_util.RawMessage(i.Sniffing),
 	}
+	
+	// Add backend address configuration if enabled (for routing purposes)
+	if i.EnableBackend && i.BackendAddress != "" && i.BackendPort > 0 {
+		config.BackendAddress = i.BackendAddress
+		config.BackendPort = i.BackendPort
+		config.EnableBackend = i.EnableBackend
+		
+		// 注意：不再修改入站协议的settings
+		// 后端代理将通过专门的出站配置和路由规则实现
+	}
+	
+	return config
 }
 
 type Setting struct {

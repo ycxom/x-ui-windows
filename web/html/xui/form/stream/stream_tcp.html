@@ -1,10 +1,10 @@
 {{define "form/streamTCP"}}
 <!-- tcp type -->
 <a-form layout="inline">
-    <a-form-item label="acceptProxyProtocol">
+    <a-form-item label='{{ i18n "pages.inbounds.stream.tcp.acceptProxyProtocol" }}'>
         <a-switch v-model="inbound.stream.tcp.acceptProxyProtocol"></a-switch>
     </a-form-item>
-    <a-form-item label="http 伪装">
+    <a-form-item label='{{ i18n "pages.inbounds.stream.tcp.httpCamouflage" }}'>
         <a-switch
                 :checked="inbound.stream.tcp.type === 'http'"
                 @change="checked => inbound.stream.tcp.type = checked ? 'http' : 'none'">

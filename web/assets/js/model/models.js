@@ -44,11 +44,36 @@ class DBInbound {
         this.streamSettings = "";
         this.tag = "";
         this.sniffing = "";
-        this.clientStats = ""
+        this.clientStats = "";
+        
+        // Backend address fields
+        this.backendAddress = "";
+        this.backendPort = 0;
+        this.backendProtocol = "http";
+        this.enableBackend = false;
         if (data == null) {
             return;
         }
         ObjectUtil.cloneProps(this, data);
+        
+        // 手动处理数据库字段名到JavaScript属性名的映射
+        if (data.backend_protocol !== undefined) {
+            this.backendProtocol = data.backend_protocol;
+        }
+        if (data.backend_address !== undefined) {
+            this.backendAddress = data.backend_address;
+        }
+        if (data.backend_port !== undefined) {
+            this.backendPort = data.backend_port;
+        }
+        if (data.enable_backend !== undefined) {
+            this.enableBackend = Boolean(data.enable_backend);
+        }
+        
+        // 确保所有后端代理字段都有有效值
+        if (this.backendProtocol === null || this.backendProtocol === undefined || this.backendProtocol === "") {
+            this.backendProtocol = "http";
+        }
     }
 
     get totalGB() {

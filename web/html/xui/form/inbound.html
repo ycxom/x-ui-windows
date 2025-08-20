@@ -27,6 +27,37 @@
     <a-form-item label='{{ i18n "pages.inbounds.port" }}'>
         <a-input type="number" v-model.number="inbound.port"></a-input>
     </a-form-item>
+    
+    <!-- Backend Address Configuration -->
+    <a-form-item>
+        <span slot="label">
+            {{ i18n "pages.inbounds.enableBackend" }}
+            <a-tooltip>
+                <template slot="title">
+                    <span>{{ i18n "pages.inbounds.enableBackendDesc" }}</span>
+                </template>
+                <a-icon type="question-circle" theme="filled"></a-icon>
+            </a-tooltip>
+        </span>
+        <a-switch v-model="dbInbound.enableBackend"></a-switch>
+    </a-form-item>
+    
+    <template v-if="dbInbound.enableBackend">
+        <a-form-item label='{{ i18n "pages.inbounds.backendProtocol" }}'>
+            <a-select v-model="dbInbound.backendProtocol" style="width: 160px;">
+                <a-select-option value="http">HTTP</a-select-option>
+                <a-select-option value="socks">SOCKS</a-select-option>
+                <a-select-option value="dokodemo">Dokodemo-door</a-select-option>
+            </a-select>
+        </a-form-item>
+        <a-form-item label='{{ i18n "pages.inbounds.backendAddress" }}'>
+            <a-input v-model.trim="dbInbound.backendAddress" placeholder="192.168.1.1"></a-input>
+        </a-form-item>
+        <a-form-item label='{{ i18n "pages.inbounds.backendPort" }}'>
+            <a-input type="number" v-model.number="dbInbound.backendPort" placeholder="8080"></a-input>
+        </a-form-item>
+    </template>
+    
     <a-form-item>
         <span slot="label">
             <span >{{ i18n "pages.inbounds.totalFlow" }}</span>(GB)

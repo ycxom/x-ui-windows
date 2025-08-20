@@ -108,6 +108,33 @@ func (s *InboundService) checkEmailExistForInbound(inbound *model.Inbound) (stri
 	return s.checkEmailsExist(emails, inbound.Id)
 }
 
+func (s *InboundService) validateBackendAddress(inbound *model.Inbound) error {
+	if inbound.EnableBackend {
+		if inbound.BackendAddress == "" {
+			return common.NewError("后端地址不能为空")
+		}
+		if inbound.BackendPort <= 0 || inbound.BackendPort > 65535 {
+			return common.NewError("后端端口必须在1-65535之间")
+		}
+		// 验证后端协议
+		if inbound.BackendProtocol == "" {
+			inbound.BackendProtocol = "http" // 默认使用HTTP协议
+		}
+		supportedBackendProtocols := []string{"http", "socks", "dokodemo"}
+		supported := false
+		for _, p := range supportedBackendProtocols {
+			if inbound.BackendProtocol == p {
+				supported = true
+				break
+			}
+		}
+		if !supported {
+			return common.NewError("不支持的后端协议:", inbound.BackendProtocol)
+		}
+	}
+	return nil
+}
+
 func (s *InboundService) AddInbound(inbound *model.Inbound) (*model.Inbound,error) {
 	exist, err := s.checkPortExist(inbound.Port, 0)
 	if err != nil {
@@ -123,6 +150,12 @@ func (s *InboundService) AddInbound(inbound *model.Inbound) (*model.Inbound,erro
 	}
 	if existEmail != "" {
 		return inbound, common.NewError("Duplicate email:", existEmail)
+	}
+	
+	// 验证后端地址配置
+	err = s.validateBackendAddress(inbound)
+	if err != nil {
+		return inbound, err
 	}
 
 	db := database.GetDB()
@@ -197,6 +230,12 @@ func (s *InboundService) UpdateInbound(inbound *model.Inbound) (*model.Inbound, 
 	if existEmail != "" {
 		return inbound, common.NewError("Duplicate email:", existEmail)
 	}
+	
+	// 验证后端地址配置
+	err = s.validateBackendAddress(inbound)
+	if err != nil {
+		return inbound, err
+	}
 
 	oldInbound, err := s.GetInbound(inbound.Id)
 	if err != nil {
@@ -215,6 +254,12 @@ func (s *InboundService) UpdateInbound(inbound *model.Inbound) (*model.Inbound, 
 	oldInbound.StreamSettings = inbound.StreamSettings
 	oldInbound.Sniffing = inbound.Sniffing
 	oldInbound.Tag = fmt.Sprintf("inbound-%v", inbound.Port)
+	
+	// Update backend address fields
+	oldInbound.BackendAddress = inbound.BackendAddress
+	oldInbound.BackendPort = inbound.BackendPort
+	oldInbound.BackendProtocol = inbound.BackendProtocol
+	oldInbound.EnableBackend = inbound.EnableBackend
 
 	s.UpdateClientStat(inbound.Id,inbound.Settings)
 	db := database.GetDB()

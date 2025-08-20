@@ -35,7 +35,20 @@ func initUser() error {
 }
 
 func initInbound() error {
-	return db.AutoMigrate(&model.Inbound{})
+	err := db.AutoMigrate(&model.Inbound{})
+	if err != nil {
+		return err
+	}
+	
+	// 手动添加backend_protocol字段（如果不存在）
+	if !db.Migrator().HasColumn(&model.Inbound{}, "backend_protocol") {
+		err = db.Migrator().AddColumn(&model.Inbound{}, "backend_protocol")
+		if err != nil {
+			return err
+		}
+	}
+	
+	return nil
 }
 
 func initSetting() error {
@@ -69,6 +82,7 @@ func InitDB(dbPath string) error {
 	c := &gorm.Config{
 		Logger: gormLogger,
 	}
+	var err error
 	db, err = gorm.Open(sqlite.Open(dbPath), c)
 	if err != nil {
 		return err

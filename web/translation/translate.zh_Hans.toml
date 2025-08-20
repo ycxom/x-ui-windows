@@ -28,8 +28,8 @@
 "sure" = "确定"
 "encryption" = "加密"
 "transmission" = "传输"
-"host" = "主持人"
-"path" = "小路"
+"host" = "主机"
+"path" = "路径"
 "camouflage" = "伪装"
 "turnOn" = "开启"
 "closure" = "关闭"
@@ -97,7 +97,7 @@
 "transportConfig" = "传输配置"
 "expireDate" = "到期时间"
 "resetTraffic" = "重置流量"
-"addInbound" = "添加入"
+"addInbound" = "添加入站"
 "addTo" = "添加"
 "revise" = "修改"
 "modifyInbound" = "修改入站"
@@ -121,6 +121,14 @@
 "publicKeyContent" = "公钥内容"
 "keyPath" = "密钥文件路径"
 "keyContent" = "密钥内容"
+"enableBackend" = "启用后端代理"
+"enableBackendDesc" = "启用后将请求转发到指定的后端地址，支持HTTP、SOCKS、Dokodemo协议"
+"backendProtocol" = "后端协议"
+"backendAddress" = "后端地址"
+"backendPort" = "后端端口"
+"addClient" = "添加客户端"
+"active" = "激活"
+"deactive" = "停用"
 
 [pages.inbounds.toasts]
 "obtain" = "获取"
@@ -138,9 +146,39 @@
 "responseStatus" = "响应状态"
 "responseStatusDescription" = "响应状态说明"
 "responseHeader" = "响应头"
+"httpCamouflage" = "HTTP 伪装"
+"acceptProxyProtocol" = "接受代理协议"
+"tcpAcceptProxyProtocol" = "TCP 接受代理协议"
 
 [pages.inbounds.stream.quic]
 "encryption" = "加密"
+
+[pages.inbounds.stream.ws]
+"acceptProxyProtocol" = "接受代理协议"
+
+[pages.inbounds.stream]
+"network" = "网络类型"
+"tcpType" = "TCP"
+"kcpType" = "KCP"
+"wsType" = "WebSocket"
+"httpType" = "HTTP/2"
+"quicType" = "QUIC"
+"grpcType" = "gRPC"
+
+[pages.inbounds.tls]
+"tls" = "TLS"
+"xtls" = "XTLS"
+"alpn" = "ALPN"
+"flow" = "流控"
+
+[pages.inbounds.sniffing]
+"sniffing" = "流量探测"
+"sniffingDesc" = "启用流量探测可以识别连接的实际协议"
+
+[pages.inbounds.protocols]
+"network" = "网络协议"
+"tcpUdp" = "TCP+UDP"
+"udp" = "UDP"
 
 
 [pages.setting]

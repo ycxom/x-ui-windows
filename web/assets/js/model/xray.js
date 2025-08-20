@@ -602,7 +602,7 @@ class Sniffing extends XrayCommonClass {
 
 class Inbound extends XrayCommonClass {
     constructor(port=RandomUtil.randomIntRange(10000, 60000),
-                listen='',
+                listen='0.0.0.0',
                 protocol=Protocols.VMESS,
                 settings=null,
                 streamSettings=new StreamSettings(),
@@ -893,7 +893,7 @@ class Inbound extends XrayCommonClass {
 
     reset() {
         this.port = RandomUtil.randomIntRange(10000, 60000);
-        this.listen = '';
+        this.listen = '0.0.0.0';
         this.protocol = Protocols.VMESS;
         this.settings = Inbound.Settings.getSettings(Protocols.VMESS);
         this.stream = new StreamSettings();

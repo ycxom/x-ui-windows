@@ -265,6 +265,8 @@ func (s *ServerService) UpdateXray(version string) error {
 	}
 
 	s.xrayService.StopXray()
+	// 等待进程完全停止，避免文件被占用
+	time.Sleep(time.Second * 3)
 	defer func() {
 		err := s.xrayService.RestartXray(true)
 		if err != nil {
