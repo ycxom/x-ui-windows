@@ -16,7 +16,7 @@ access.log
 .cache
 Xray-windows-64
 .codebuddy
-*.exe
+x-ui.exe
 *.db
 restart_xray.ps1
 insert_socks_test.sql
