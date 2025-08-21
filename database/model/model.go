@@ -25,15 +25,15 @@ type User struct {
 }
 
 type Inbound struct {
-	Id         int    `json:"id" form:"id" gorm:"primaryKey;autoIncrement"`
-	UserId     int    `json:"-"`
-	Up         int64  `json:"up" form:"up"`
-	Down       int64  `json:"down" form:"down"`
-	Total      int64  `json:"total" form:"total"`
-	Remark     string `json:"remark" form:"remark"`
-	Enable     bool   `json:"enable" form:"enable"`
-	ExpiryTime int64  `json:"expiryTime" form:"expiryTime"`
-    ClientStats []xray.ClientTraffic  `gorm:"foreignKey:InboundId;references:Id" json:"clientStats" form:"clientStats"`
+	Id          int                  `json:"id" form:"id" gorm:"primaryKey;autoIncrement"`
+	UserId      int                  `json:"-"`
+	Up          int64                `json:"up" form:"up"`
+	Down        int64                `json:"down" form:"down"`
+	Total       int64                `json:"total" form:"total"`
+	Remark      string               `json:"remark" form:"remark"`
+	Enable      bool                 `json:"enable" form:"enable"`
+	ExpiryTime  int64                `json:"expiryTime" form:"expiryTime"`
+	ClientStats []xray.ClientTraffic `gorm:"foreignKey:InboundId;references:Id" json:"clientStats" form:"clientStats"`
 
 	// config part
 	Listen         string   `json:"listen" form:"listen"`
@@ -43,17 +43,17 @@ type Inbound struct {
 	StreamSettings string   `json:"streamSettings" form:"streamSettings"`
 	Tag            string   `json:"tag" form:"tag" gorm:"unique"`
 	Sniffing       string   `json:"sniffing" form:"sniffing"`
-	
+
 	// custom backend address fields
-	BackendAddress  string `json:"backendAddress" form:"backendAddress"`
-	BackendPort     int    `json:"backendPort" form:"backendPort"`
-	BackendProtocol string `json:"backendProtocol" form:"backendProtocol"`
-	EnableBackend   bool   `json:"enableBackend" form:"enableBackend"`
+	BackendAddress  string `json:"backendAddress" form:"backendAddress" gorm:"column:backend_address"`
+	BackendPort     int    `json:"backendPort" form:"backendPort" gorm:"column:backend_port"`
+	BackendProtocol string `json:"backendProtocol" form:"backendProtocol" gorm:"column:backend_protocol"`
+	EnableBackend   bool   `json:"enableBackend" form:"enableBackend" gorm:"column:enable_backend"`
 }
 type InboundClientIps struct {
-	Id       int    `json:"id" gorm:"primaryKey;autoIncrement"`
+	Id          int    `json:"id" gorm:"primaryKey;autoIncrement"`
 	ClientEmail string `json:"clientEmail" form:"clientEmail" gorm:"unique"`
-	Ips string `json:"ips" form:"ips"`
+	Ips         string `json:"ips" form:"ips"`
 }
 
 func (i *Inbound) GenXrayInboundConfig() *xray.InboundConfig {
@@ -64,7 +64,7 @@ func (i *Inbound) GenXrayInboundConfig() *xray.InboundConfig {
 	} else {
 		listen = fmt.Sprintf("\"%v\"", listen)
 	}
-	
+
 	config := &xray.InboundConfig{
 		Listen:         json_util.RawMessage(listen),
 		Port:           i.Port,
@@ -74,17 +74,17 @@ func (i *Inbound) GenXrayInboundConfig() *xray.InboundConfig {
 		Tag:            i.Tag,
 		Sniffing:       json_util.RawMessage(i.Sniffing),
 	}
-	
+
 	// Add backend address configuration if enabled (for routing purposes)
 	if i.EnableBackend && i.BackendAddress != "" && i.BackendPort > 0 {
 		config.BackendAddress = i.BackendAddress
 		config.BackendPort = i.BackendPort
 		config.EnableBackend = i.EnableBackend
-		
+
 		// 注意：不再修改入站协议的settings
 		// 后端代理将通过专门的出站配置和路由规则实现
 	}
-	
+
 	return config
 }
 
@@ -94,11 +94,11 @@ type Setting struct {
 	Value string `json:"value" form:"value"`
 }
 type Client struct {
-	ID       string `json:"id"`
-	AlterIds uint16 `json:"alterId"`
-	Email string `json:"email"`
-	LimitIP int `json:"limitIp"`
-	Security string `json:"security"`
-	TotalGB      int64  `json:"totalGB" form:"totalGB"`
+	ID         string `json:"id"`
+	AlterIds   uint16 `json:"alterId"`
+	Email      string `json:"email"`
+	LimitIP    int    `json:"limitIp"`
+	Security   string `json:"security"`
+	TotalGB    int64  `json:"totalGB" form:"totalGB"`
 	ExpiryTime int64  `json:"expiryTime" form:"expiryTime"`
 }

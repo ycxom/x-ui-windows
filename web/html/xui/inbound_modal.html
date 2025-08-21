@@ -28,6 +28,23 @@
             }
             if (dbInbound) {
                 this.dbInbound = new DBInbound(dbInbound);
+                // 确保后端代理字段被正确复制
+                if (dbInbound.enableBackend !== undefined) {
+                    this.dbInbound.enableBackend = Boolean(dbInbound.enableBackend);
+                    Vue.set(this.dbInbound, 'enableBackend', Boolean(dbInbound.enableBackend));
+                }
+                if (dbInbound.backendAddress !== undefined) {
+                    this.dbInbound.backendAddress = dbInbound.backendAddress;
+                    Vue.set(this.dbInbound, 'backendAddress', dbInbound.backendAddress);
+                }
+                if (dbInbound.backendPort !== undefined) {
+                    this.dbInbound.backendPort = Number(dbInbound.backendPort) || 0;
+                    Vue.set(this.dbInbound, 'backendPort', Number(dbInbound.backendPort) || 0);
+                }
+                if (dbInbound.backendProtocol !== undefined) {
+                    this.dbInbound.backendProtocol = dbInbound.backendProtocol;
+                    Vue.set(this.dbInbound, 'backendProtocol', dbInbound.backendProtocol);
+                }
             } else {
                 this.dbInbound = new DBInbound();
             }
@@ -189,6 +206,10 @@
                     string += chars[Math.floor(Math.random() * chars.length)];
                 }
                 client.email = string + "@gmail.com"
+            },
+            onBackendToggle(value) {
+                // 强制Vue重新渲染后端代理字段
+                this.$forceUpdate();
             }
         },
     });

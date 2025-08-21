@@ -39,10 +39,30 @@
                 <a-icon type="question-circle" theme="filled"></a-icon>
             </a-tooltip>
         </span>
-        <a-switch v-model="dbInbound.enableBackend"></a-switch>
+        <a-switch v-model="dbInbound.enableBackend" @change="onBackendToggle"></a-switch>
     </a-form-item>
     
-    <template v-if="dbInbound.enableBackend">
+    <!-- 初始化后端代理字段 -->
+    <script>
+        // 确保后端代理字段正确初始化
+        if (typeof dbInbound !== 'undefined' && dbInbound) {
+            // 从数据库读取的值或使用默认值
+            dbInbound.enableBackend = dbInbound.enableBackend || false;
+            dbInbound.backendAddress = dbInbound.backendAddress || "127.0.0.1";
+            dbInbound.backendPort = dbInbound.backendPort || 10808;
+            dbInbound.backendProtocol = dbInbound.backendProtocol || "http";
+            
+            // 使用Vue.set确保响应式绑定
+            if (typeof Vue !== 'undefined' && Vue.set) {
+                Vue.set(dbInbound, 'enableBackend', dbInbound.enableBackend);
+                Vue.set(dbInbound, 'backendAddress', dbInbound.backendAddress);
+                Vue.set(dbInbound, 'backendPort', dbInbound.backendPort);
+                Vue.set(dbInbound, 'backendProtocol', dbInbound.backendProtocol);
+            }
+        }
+    </script>
+    
+    <template v-if="dbInbound.enableBackend === true">
         <a-form-item label='{{ i18n "pages.inbounds.backendProtocol" }}'>
             <a-select v-model="dbInbound.backendProtocol" style="width: 160px;">
                 <a-select-option value="http">HTTP</a-select-option>

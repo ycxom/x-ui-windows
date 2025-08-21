@@ -51,29 +51,82 @@ class DBInbound {
         this.backendPort = 0;
         this.backendProtocol = "http";
         this.enableBackend = false;
+        
+        // 确保布尔值类型正确
+        if (typeof this.enableBackend !== 'boolean') {
+            this.enableBackend = Boolean(this.enableBackend);
+        }
         if (data == null) {
+            console.log('DBInbound: data is null');
             return;
         }
-        ObjectUtil.cloneProps(this, data);
         
+        console.log('🔥🔥🔥 DBInbound构造函数被调用 - 新版本 🔥🔥🔥');
+        console.log('DBInbound: 原始数据 =', data);
+        console.log('DBInbound: 后端代理字段检查:');
+        console.log('  - enableBackend:', data.enableBackend);
+        console.log('  - enable_backend:', data.enable_backend);
+        console.log('  - backendAddress:', data.backendAddress);
+        console.log('  - backend_address:', data.backend_address);
+        console.log('  - backendPort:', data.backendPort);
+        console.log('  - backend_port:', data.backend_port);
+        console.log('  - backendProtocol:', data.backendProtocol);
+        console.log('  - backend_protocol:', data.backend_protocol);
+        
+        // 在cloneProps之前先处理字段映射，确保数据正确复制
         // 手动处理数据库字段名到JavaScript属性名的映射
-        if (data.backend_protocol !== undefined) {
+        if (data.backendProtocol !== undefined) {
+            this.backendProtocol = data.backendProtocol;
+        } else if (data.backend_protocol !== undefined) {
             this.backendProtocol = data.backend_protocol;
         }
-        if (data.backend_address !== undefined) {
+        
+        if (data.backendAddress !== undefined) {
+            this.backendAddress = data.backendAddress;
+        } else if (data.backend_address !== undefined) {
             this.backendAddress = data.backend_address;
         }
-        if (data.backend_port !== undefined) {
-            this.backendPort = data.backend_port;
+        
+        if (data.backendPort !== undefined) {
+            this.backendPort = Number(data.backendPort) || 0;
+        } else if (data.backend_port !== undefined) {
+            this.backendPort = Number(data.backend_port) || 0;
         }
-        if (data.enable_backend !== undefined) {
-            this.enableBackend = Boolean(data.enable_backend);
+        
+        if (data.enableBackend !== undefined) {
+            this.enableBackend = Boolean(data.enableBackend);
+        } else if (data.enable_backend !== undefined) {
+            // SQLite存储布尔值为数值，需要正确转换
+            this.enableBackend = Boolean(Number(data.enable_backend));
         }
+        
+        console.log('DBInbound: 字段映射处理后(cloneProps前):');
+        console.log('  - this.enableBackend:', this.enableBackend, typeof this.enableBackend);
+        console.log('  - this.backendAddress:', this.backendAddress);
+        console.log('  - this.backendPort:', this.backendPort);
+        console.log('  - this.backendProtocol:', this.backendProtocol);
+        
+        // 现在调用cloneProps复制其他字段
+        ObjectUtil.cloneProps(this, data);
         
         // 确保所有后端代理字段都有有效值
         if (this.backendProtocol === null || this.backendProtocol === undefined || this.backendProtocol === "") {
             this.backendProtocol = "http";
         }
+        
+        // 确保后端代理字段的响应式
+        if (typeof Vue !== 'undefined' && Vue.set) {
+            Vue.set(this, 'enableBackend', this.enableBackend);
+            Vue.set(this, 'backendAddress', this.backendAddress);
+            Vue.set(this, 'backendPort', this.backendPort);
+            Vue.set(this, 'backendProtocol', this.backendProtocol);
+        }
+        
+        console.log('DBInbound: 最终结果:');
+        console.log('  - this.enableBackend:', this.enableBackend, typeof this.enableBackend);
+        console.log('  - this.backendAddress:', this.backendAddress);
+        console.log('  - this.backendPort:', this.backendPort);
+        console.log('  - this.backendProtocol:', this.backendProtocol);
     }
 
     get totalGB() {

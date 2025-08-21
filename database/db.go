@@ -1,15 +1,16 @@
 package database
 
 import (
-	"github.com/glebarez/sqlite"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"io/fs"
 	"os"
 	"path"
 	"x-ui/config"
-	"x-ui/xray"
 	"x-ui/database/model"
+	"x-ui/xray"
+
+	"github.com/glebarez/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var db *gorm.DB
@@ -39,15 +40,36 @@ func initInbound() error {
 	if err != nil {
 		return err
 	}
-	
-	// 手动添加backend_protocol字段（如果不存在）
+
+	// 手动添加后端代理相关字段（如果不存在）
 	if !db.Migrator().HasColumn(&model.Inbound{}, "backend_protocol") {
 		err = db.Migrator().AddColumn(&model.Inbound{}, "backend_protocol")
 		if err != nil {
 			return err
 		}
 	}
-	
+
+	if !db.Migrator().HasColumn(&model.Inbound{}, "backend_address") {
+		err = db.Migrator().AddColumn(&model.Inbound{}, "backend_address")
+		if err != nil {
+			return err
+		}
+	}
+
+	if !db.Migrator().HasColumn(&model.Inbound{}, "backend_port") {
+		err = db.Migrator().AddColumn(&model.Inbound{}, "backend_port")
+		if err != nil {
+			return err
+		}
+	}
+
+	if !db.Migrator().HasColumn(&model.Inbound{}, "enable_backend") {
+		err = db.Migrator().AddColumn(&model.Inbound{}, "enable_backend")
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -108,7 +130,7 @@ func InitDB(dbPath string) error {
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 

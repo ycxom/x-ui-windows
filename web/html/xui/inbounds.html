@@ -202,6 +202,25 @@
                 this.dbInbounds.splice(0);
                 for (const inbound of dbInbounds) {
                     const dbInbound = new DBInbound(inbound);
+                    
+                    // 确保后端代理字段正确设置
+                    if (inbound.enableBackend !== undefined) {
+                        dbInbound.enableBackend = Boolean(inbound.enableBackend);
+                        Vue.set(dbInbound, 'enableBackend', Boolean(inbound.enableBackend));
+                    }
+                    if (inbound.backendAddress !== undefined) {
+                        dbInbound.backendAddress = inbound.backendAddress;
+                        Vue.set(dbInbound, 'backendAddress', inbound.backendAddress);
+                    }
+                    if (inbound.backendPort !== undefined) {
+                        dbInbound.backendPort = Number(inbound.backendPort) || 0;
+                        Vue.set(dbInbound, 'backendPort', Number(inbound.backendPort) || 0);
+                    }
+                    if (inbound.backendProtocol !== undefined) {
+                        dbInbound.backendProtocol = inbound.backendProtocol;
+                        Vue.set(dbInbound, 'backendProtocol', inbound.backendProtocol);
+                    }
+                    
                     this.inbounds.push(dbInbound.toInbound());
                     this.dbInbounds.push(dbInbound);
                 }
